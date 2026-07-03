@@ -7,6 +7,13 @@
       "automerge": true
     },
     {
+      "description": "Major updates of indirect Go deps won't work",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+    {
       "matchManagers": ["gomod"],
       "matchDepTypes": ["indirect"],
       "enabled": true
