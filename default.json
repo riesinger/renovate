@@ -12,7 +12,7 @@
       "matchDepTypes": ["indirect"],
       "matchUpdateTypes": ["major"],
       "enabled": false
-    }
+    },
     {
       "matchManagers": ["gomod"],
       "matchDepTypes": ["indirect"],
