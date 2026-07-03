@@ -1,0 +1,44 @@
+name: Validate Renovate Config
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  prepare:
+    name: Prepare file list
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Generate file matrix
+        id: set-matrix
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const files = fs.readdirSync('.')
+              .filter(file => file.endsWith('.json'));
+            core.setOutput('matrix', JSON.stringify(files));
+  validate:
+    name: ${{ matrix.file }}
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      matrix:
+        file: ${{ fromJson(needs.prepare.outputs.matrix) }}
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Validate ${{ matrix.file }}
+        uses: docker://ghcr.io/renovatebot/renovate:latest
+        with:
+          args: renovate-config-validator --strict ${{ matrix.file }}
+        env:
+          LOG_LEVEL: debug

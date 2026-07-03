@@ -1,11 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "timezone": "Europe/Berlin",
+  "extends": ["config:recommended", ":automergeDigest", ":automergeMinor", ":automergeRequireAllStatusChecks"],
   "packageRules": [
-    {
-      "matchUpdateTypes": ["minor", "patch", "digest"],
-      "automerge": true
-    },
     {
       "description": "Major updates of indirect Go deps won't work",
       "matchManagers": ["gomod"],
@@ -19,7 +16,7 @@
       "enabled": true
     }
   ],
-  "postUpdateOptions": ["gomodTidy"],
+  "postUpdateOptions": ["gomodUpdateImportPaths", "gomodTidy", "pnpmDedupe", "npmDedupe"],
   "dependencyDashboardLabels": ["dependency-update"],
   "labels": ["dependency-update"]
 }
